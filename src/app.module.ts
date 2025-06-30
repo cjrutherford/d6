@@ -5,6 +5,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { AssetModule } from './asset/asset.module';
+import { DailySixModule } from './daily-six/daily-six.module';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { AssetModule } from './asset/asset.module';
     }),
     AuthenticationModule, 
     UsersModule, 
-    AssetModule
+    AssetModule, DailySixModule
   ],
   controllers: [AppController],
   providers: [AppService],
