@@ -6,6 +6,8 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { AssetModule } from './asset/asset.module';
 import { DailySixModule } from './daily-six/daily-six.module';
+import { DailyFourModule } from './daily-four/daily-four.module';
+import { AiAssistanceModule } from './ai-assistance/ai-assistance.module';
 
 @Module({
   imports: [
@@ -15,7 +17,7 @@ import { DailySixModule } from './daily-six/daily-six.module';
     }),
     AuthenticationModule, 
     UsersModule, 
-    AssetModule, DailySixModule
+    AssetModule, DailySixModule, DailyFourModule, AiAssistanceModule
   ],
   controllers: [AppController],
   providers: [AppService],

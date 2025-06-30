@@ -3,6 +3,8 @@ import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typ
 import { ApiProperty } from '@nestjs/swagger';
 import TokenEntity from "./token.entity";
 import UserProfileEntity from "./user-profile.entity";
+import DailySixEntity from "./daily-six.entity";
+import DailyFourEntity from "./daily-four.entity";
 
 @Entity()
 export default class UserEntity {
@@ -20,6 +22,12 @@ export default class UserEntity {
 
     @OneToMany(() => TokenEntity, token => token.user, { cascade: true })
     tokens: TokenEntity[];
+
+    @OneToMany(() => DailySixEntity, dailySix => dailySix.userId)
+    dailySixes: DailySixEntity[];
+
+    @OneToMany(() => DailyFourEntity, dailyFour => dailyFour.user)
+    dailyFours: DailyFourEntity[];
 }
 
 

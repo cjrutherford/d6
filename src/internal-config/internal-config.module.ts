@@ -1,5 +1,12 @@
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SaltEntity, TokenEntity, UserEntity, UserProfileEntity } from '../database/entities';
+import { 
+    SaltEntity, 
+    TokenEntity, 
+    UserEntity, 
+    UserProfileEntity,
+    DailyFourEntity,
+    DailySixEntity
+} from '../database/entities';
 
 import { DataSource } from 'typeorm';
 import { DatabaseModule } from 'src/database/database.module';
@@ -47,7 +54,9 @@ import { getRepositoryToken } from '@nestjs/typeorm';
         getRepositoryToken(UserEntity),
         getRepositoryToken(TokenEntity),
         getRepositoryToken(SaltEntity),
-        getRepositoryToken(UserProfileEntity)
+        getRepositoryToken(UserProfileEntity),
+        getRepositoryToken(DailySixEntity),
+        getRepositoryToken(DailyFourEntity)
     ],
     providers: [
         {
@@ -65,6 +74,14 @@ import { getRepositoryToken } from '@nestjs/typeorm';
         },{
             provide: getRepositoryToken(UserProfileEntity),
             useFactory: (dataSource: DataSource) => dataSource.getRepository(UserProfileEntity),
+            inject: ['D6_CONNECTION'],
+        },{
+            provide: getRepositoryToken(DailySixEntity),
+            useFactory: (dataSource: DataSource) => dataSource.getRepository(DailySixEntity),
+            inject: ['D6_CONNECTION'],
+        },{
+            provide: getRepositoryToken(DailyFourEntity),
+            useFactory: (dataSource: DataSource) => dataSource.getRepository(DailyFourEntity),
             inject: ['D6_CONNECTION'],
         }
     ]
