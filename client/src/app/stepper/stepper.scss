@@ -1,0 +1,49 @@
+
+.stepper-container {
+  border: 1px solid var(--secondary);
+  padding: 0;
+  margin: 0 auto;
+  height: 100%;
+  width: 90%;
+  border-radius: 8px;
+  padding: 1rem;
+}
+.stepper-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+.stepper-header .active {
+  font-weight: bold;
+  font-size: 18px;
+  color: var(--highlight);
+  background: var(--secondary);
+  padding: 1rem;
+  border-radius: 10px;
+}
+.stepper-content {
+  margin-bottom: 20px;
+  label {
+    font-size: 16pt;
+    margin-bottom: 20px;
+  }
+  p {
+    margin-bottom: 20px;
+  }
+}
+.stepper-actions {
+  display: flex;
+  justify-content: space-between;
+}
+.question {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: flex;
+  flex-direction: column;
+}
+

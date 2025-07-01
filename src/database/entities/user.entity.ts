@@ -23,7 +23,7 @@ export default class UserEntity {
     @OneToMany(() => TokenEntity, token => token.user, { cascade: true })
     tokens: TokenEntity[];
 
-    @OneToMany(() => DailySixEntity, dailySix => dailySix.userId)
+    @OneToMany(() => DailySixEntity, dailySix => dailySix.user)
     dailySixes: DailySixEntity[];
 
     @OneToMany(() => DailyFourEntity, dailyFour => dailyFour.user)

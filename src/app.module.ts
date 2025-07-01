@@ -8,6 +8,8 @@ import { AssetModule } from './asset/asset.module';
 import { DailySixModule } from './daily-six/daily-six.module';
 import { DailyFourModule } from './daily-four/daily-four.module';
 import { AiAssistanceModule } from './ai-assistance/ai-assistance.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [

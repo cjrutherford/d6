@@ -42,7 +42,9 @@ import { getRepositoryToken } from '@nestjs/typeorm';
                     UserEntity,
                     SaltEntity,
                     TokenEntity,
-                    UserProfileEntity
+                    UserProfileEntity,
+                    DailySixEntity,
+                    DailyFourEntity,
                 ],
                 synchronize: true,
                 logging: false

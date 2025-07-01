@@ -1,0 +1,13 @@
+.content-card {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+    h2 {
+        margin-bottom: 10px;
+    }
+    p, li {
+        margin: 10px;
+        font-size: 14px;
+    }
+}

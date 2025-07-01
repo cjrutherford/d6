@@ -1,0 +1,23 @@
+<app-title-bar>
+</app-title-bar>
+<router-outlet />
+<div *ngIf="!showThemePicker()" class="theme-picker-bubble">
+    <button width="40px" class="theme-toggle" (click)="toggleThemePicker()" [attr.aria-label]="showThemePicker() ? 'Hide theme picker' : 'Show theme picker'">
+      <span class="icon">🎨</span>
+    </button>
+  </div>
+  <div *ngIf="showThemePicker()" class="theme-picker-bubble">
+    <button class="close-button" (click)="toggleThemePicker()" [attr.aria-label]="'Close theme picker'">
+      <span class="icon">❌</span>
+    </button>
+    <button class="mode-toggle" (click)="toggleThemeMode()" [attr.aria-label]="themeMode() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'">
+      <span *ngIf="themeMode() === 'light'" class="icon">☀️</span>
+      <span *ngIf="themeMode() === 'dark'" class="icon">🌙</span>
+    </button>
+    <select class="theme-select" [(ngModel)]="selectedTheme" (ngModelChange)="setTheme($event)">
+      <option *ngFor="let theme of themes" [ngValue]="theme">{{ theme.name }}</option>
+    </select>
+    <div class="palette-preview">
+      <span *ngFor="let swatch of currentPalette()" class="swatch" [style.background]="swatch.code" [title]="swatch.description"></span>
+    </div>
+  </div>
