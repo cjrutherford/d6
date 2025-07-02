@@ -85,7 +85,7 @@ describe('UsersService', () => {
 
       const result = await service.createUserProfile(userId, profileData);
 
-      expect(userProfileRepo.findOne).toHaveBeenCalledWith({ where: { userId } });
+      expect(userProfileRepo.findOne).toHaveBeenCalledWith({ where: { user: { id: userId }} });
       expect(assetService.saveAsset).toHaveBeenCalled();
       expect(userProfileRepo.create).toHaveBeenCalled();
       expect(userProfileRepo.save).toHaveBeenCalledWith(mockProfile);
@@ -174,7 +174,7 @@ describe('UsersService', () => {
 
       await service.deleteUserProfile(userId);
 
-      expect(userProfileRepo.findOne).toHaveBeenCalledWith({ where: { userId } });
+      expect(userProfileRepo.findOne).toHaveBeenCalledWith({ where: { user: { id:userId } } });
       expect(assetService.deleteAsset).toHaveBeenCalledWith('pic.png');
       expect(userProfileRepo.remove).toHaveBeenCalledWith(profile);
     });

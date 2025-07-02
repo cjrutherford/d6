@@ -1,0 +1,33 @@
+
+<div class="stepper-container">
+  <div class="stepper-header">
+    <ng-container *ngFor="let q of questions; let i = index">
+      <span [class.active]="i === currentStep">{{ q.label || `Step ${i + 1}` }}</span>
+      <span *ngIf="i < questions.length - 1">→</span>
+    </ng-container>
+  </div>
+
+  <div class="stepper-content" *ngIf="questions.length > 0">
+    <div class="question">
+      <ng-container *ngIf="questions[currentStep] as question">
+        <label [for]="'question-' + currentStep">{{ question.question }}</label>
+        <p>{{question.description}}</p>
+        <textarea 
+          [id]="'question-' + currentStep"
+          [(ngModel)]="answers[currentStep]"></textarea>
+      </ng-container>
+    </div>
+    <div class="analysis">
+      <ng-container *ngIf="indexHasResponse()">
+        <p>Analysis for: {{ questions[currentStep].question }}</p>
+        <p>Your answer: {{ questions[currentStep].response }}</p>
+      </ng-container>
+    </div>
+  </div>
+
+  <div class="stepper-actions">
+    <button (click)="prevStep()" [disabled]="currentStep === 0">Previous</button>
+    <button *ngIf="!!questions[currentStep].action" (click)="processStepAction()">Analyze</button>
+    <button (click)="nextStep()">{{ currentStep === questions.length - 1 ? 'Finish' : 'Next' }}</button>
+  </div>
+</div>

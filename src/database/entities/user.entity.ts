@@ -1,5 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+
 import { ApiProperty } from '@nestjs/swagger';
+import TokenEntity from "./token.entity";
+import UserProfileEntity from "./user-profile.entity";
+import DailySixEntity from "./daily-six.entity";
+import DailyFourEntity from "./daily-four.entity";
 
 @Entity()
 export default class UserEntity {
@@ -11,7 +16,20 @@ export default class UserEntity {
 
     @Column()
     password: string;
+
+    @OneToOne(() => UserProfileEntity, up => up.user)
+    profile: UserProfileEntity;
+
+    @OneToMany(() => TokenEntity, token => token.user, { cascade: true })
+    tokens: TokenEntity[];
+
+    @OneToMany(() => DailySixEntity, dailySix => dailySix.user)
+    dailySixes: DailySixEntity[];
+
+    @OneToMany(() => DailyFourEntity, dailyFour => dailyFour.user)
+    dailyFours: DailyFourEntity[];
 }
+
 
 export class LoginDto {
     @ApiProperty({ example: 'user@example.com', description: 'User email address' })
