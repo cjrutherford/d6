@@ -96,7 +96,7 @@ export class Profile {
 
     if (isNewProfile) {
       // Create new profile
-      await firstValueFrom(this.users.createUser(createProfileDto))
+      await firstValueFrom(this.userProfileService.createProfile(createProfileDto))
         .catch((err: any) => {
           console.error('Error creating profile:', err)
           this.messageService.addMessage({
