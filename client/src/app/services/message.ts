@@ -25,16 +25,11 @@ export class MessageService {
   }
 
   dismiss(index: number) {
-    console.log("Dismissing message at index:", index);
     const currentMessages = this.messages.getValue();
     // Ensure index is within bounds
-    console.log("Current messages before dismissal:", currentMessages);
     if (index >= 0 && index < currentMessages.length) {
-      console.log("Removing message:", currentMessages[index]);
       currentMessages.splice(index, 1);
-      console.log("Current messages after dismissal:", currentMessages);
       this.messages.next([...currentMessages]);
-      console.log("Messages after dismissal:", this.messages.getValue());
     }
   }
 }

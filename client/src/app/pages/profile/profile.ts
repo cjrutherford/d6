@@ -37,7 +37,7 @@ export class Profile {
   editedProfilePhotoUrl = signal(this.profilePhotoUrl());
 
   loadProfile() {
-    this.userProfile.getUserProfile().subscribe({
+    this.users.getUsers().subscribe({
       next: (profile: ProfileType) => {
         if (profile) {
           this.username.set(profile.name ?? 'johndoe');
@@ -96,7 +96,7 @@ export class Profile {
 
     if (isNewProfile) {
       // Create new profile
-      await firstValueFrom(this.userProfileService.createProfile(createProfileDto))
+      await firstValueFrom(this.users.createUser(createProfileDto))
         .catch((err: any) => {
           console.error('Error creating profile:', err)
           this.messageService.addMessage({
