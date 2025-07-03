@@ -1,17 +1,24 @@
 import { StepType, Stepper } from '../../stepper/stepper';
 
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DailyFour } from '../../services/daily-four';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-d4',
-  imports: [Stepper],
+  imports: [CommonModule, Stepper],
   providers: [DailyFour],
   templateUrl: './d4.html',
   styleUrl: './d4.scss'
 })
 export class D4 {
-  constructor(private readonly dailyFour: DailyFour) {}
+  constructor(private readonly dailyFour: DailyFour, private readonly router: Router) {}
+
+  answers: string[] = [];
+  publicPost = false;
+  showCompletionModal = false;
+
   steps: StepType[] = [
     {
       label: 'Affirmation',
@@ -55,21 +62,30 @@ export class D4 {
     }
   ];
 
-  onStepperComplete(answers: string[]) {
-    const [affirmation, plannedPleasurable, mindfulActivity, gratitude] = answers;
+  setPostComplete(isPublic: boolean) {
+    this.publicPost = isPublic;
+    const [affirmation, plannedPleasurable, mindfulActivity, gratitude] = this.answers;
     this.dailyFour.createDailyFour({
       affirmation,
       plannedPleasurable,
       mindfulActivity,
-      gratitude
+      gratitude,
+      public: this.publicPost
     }).subscribe({
       next: (response) => {
         console.log('Daily Four created successfully:', response);
+        this.router.navigate(['/']);
       },
       error: (error) => {
         console.error('Error creating Daily Four:', error);
+        this.showCompletionModal = false;
       }
     });
+  }
+
+  onStepperComplete(answers: string[]) {
+    this.answers = answers;
+    this.showCompletionModal = true;
   }
 
 }

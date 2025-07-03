@@ -45,4 +45,7 @@ export class DailyFour {
   getDailyFour(id: string) {
     return this.http.get<DailyFourDto>(`/api/daily-four/${id}`);
   }
+  getPublicDailyFours() {
+    return this.http.post<DailyFourDto[]>('/api/daily-four/query', { public: true });
+  }
 }

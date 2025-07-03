@@ -42,6 +42,7 @@ export class AssetService {
         try {
             return await fs.readFile(filePath);
         } catch (error) {
+            console.log(`AssetService: Failed to read asset ${fileName}`, error.message);
             throw new Error(`Asset not found: ${fileName}`);
         }   
     }

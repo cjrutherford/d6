@@ -2,7 +2,7 @@
  * Controller for user profile endpoints.
  * Handles CRUD operations for user profiles and requires authentication.
  */
-import { Body, Controller, Delete, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Put, UseGuards, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { AuthGuard } from '../authentication/auth/auth.guard';
 import { CreateUserProfileDto } from '../database/entities';
@@ -27,6 +27,20 @@ export class UsersController {
             throw new Error('User not authenticated');
         }
         return await this.usersService.getUserProfile(user.userId);
+    }
+
+
+    /**
+     * Gets a user profile by user ID.
+     * @param userId The ID of the user
+     * @returns The user's profile
+     */
+    @Get(':userId')
+    async getUserProfileById(@User() user: UserType, @Param('userId') userId: string) {
+        if (!user?.userId) {
+            throw new Error('User not authenticated');
+        }
+        return await this.usersService.getUserProfile(userId);
     }
 
     /**

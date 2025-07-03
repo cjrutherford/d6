@@ -25,6 +25,10 @@ export class UserProfile {
     return this.http.get(`${this.baseUrl}`);
   }
 
+  getUserProfileById(userId: string) {
+    return this.http.get<ProfileType>(`${this.baseUrl}s/${userId}`);
+  }
+
   createUserProfile(profileData: CreateUserProfileDto) {
     return this.http.post(`${this.baseUrl}`, profileData);
   }

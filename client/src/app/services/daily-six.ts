@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 export interface DailySixDto {
     id: string;
     createdAt: Date;
-    userId: number;
+    userId: string;
     affirmation: string;
     plannedPleasurable: string;
     judgement: string;
@@ -50,5 +50,9 @@ export class DailySix {
 
   getDailySix(id: string) {
     return this.http.get<DailySixDto>(`/api/daily-six/${id}`);
+  }
+
+  getPublicDailySixes() {
+    return this.http.post<DailySixDto[]>('/api/daily-six/query', { public: true });
   }
 }

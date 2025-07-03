@@ -1,1 +1,25 @@
-<p>feed works!</p>
+<div class="grid-list">
+    @for(post of posts(); track post.id) {
+        <div class="content-card">
+            <div class="post-header">
+                <img [src]="post.userAvatar" alt="">
+                <h2 class="post-title">{{ post.userName }}</h2>
+            </div>
+            <div class="post-content">
+                @for(prompt of getPrompts(post); track prompt) {
+                    <div class="section">
+                        <strong>{{ prompt[0] }}:</strong>
+                        <p>{{ prompt[1]}}</p>
+                    </div>
+                }
+            </div>
+            <!-- Common footer for both types -->
+            <div class="post-footer">
+                <div class="post-date">{{ post.createdAt | date }}</div>
+                <div class="post-visibility" *ngIf="post.public">
+                    <span class="public-badge">Public</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>

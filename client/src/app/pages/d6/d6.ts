@@ -1,18 +1,23 @@
+import { Component, signal } from '@angular/core';
 import { StepType, Stepper } from '../../stepper/stepper';
 
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { DailySix } from '../../services/daily-six';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-d6',
-  imports: [Stepper],
+imports: [CommonModule, Stepper],
   providers: [DailySix],
   templateUrl: './d6.html',
   styleUrl: './d6.scss'
 })
 export class D6 {
 
-  constructor(private readonly dailySix: DailySix) {}
+  constructor(private readonly dailySix: DailySix, private readonly router: Router) {}
+  answers: string[] = [];
+  publicPost = false;
+  showCompletionModal = false;
 
   steps: StepType[] = [
   {
@@ -77,22 +82,32 @@ export class D6 {
   }
   ];
 
-  onStepperComplete(answers: string[]) {
-    const [affirmation, judgement, nonJudgement, plannedPleasurable, mindfulActivity, gratitude] = answers;
+  setPostComplete(value: boolean) {
+    this.publicPost = value;
+    const [affirmation, judgement, nonJudgement, plannedPleasurable, mindfulActivity, gratitude] = this.answers;
     this.dailySix.createDailySix({
       affirmation,
       judgement,
       nonJudgement,
       plannedPleasurable,
       mindfulActivity,
-      gratitude
+      gratitude,
+      public: this.publicPost
     }).subscribe({
       next: (response) => {
         console.log('Daily Six created successfully:', response);
+        this.router.navigate(['/']);
+        this.showCompletionModal = false;
       },
       error: (error) => {
         console.error('Error creating Daily Six:', error);
+        this.showCompletionModal = false;
       }
     });
+  }
+
+  onStepperComplete(answers: string[]) {
+    this.answers = answers;
+    this.showCompletionModal = true;
   }
 }

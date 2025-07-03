@@ -17,7 +17,7 @@ export class TitleBar {
     { label: 'Daily 6', route: '/daily6', icon: '📅6' },
     { label: 'Feed', route: '/feed', icon: '📰' },
     { label: 'Profile', route: '/profile', icon: '👤' },
-    { label: 'Help', route: '/help', icon: '❓' },
+    // { label: 'Help', route: '/help', icon: '❓' },
     { label: 'Authentication', route: '/auth', icon: '🔐' },
   ]
 

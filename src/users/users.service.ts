@@ -25,30 +25,35 @@ export class UsersService {
    * @throws Error if profile or profile picture is not found
    */
   async getUserProfile(userId: string): Promise<UserProfileEntity> {
-    const profile = await this.userProfileRepo.findOne({
-      where: { user: { id: userId } },
-    });
-    if (!profile) {
-      throw new Error(`User profile not found for user ID: ${userId}`);
-    }
-    const profileAsset = await this.assetService.readAsset(
-      profile.profilePictureUrl!,
-    );
-    if (!profileAsset) {
-      throw new Error(`Profile picture not found for user ID: ${userId}`);
-    }
-    // Assume PNG for profile pictures; adjust MIME type if needed
-    let base64ProfilePicture = `${profileAsset.toString('base64')}`;
+    try {
+      const profile = await this.userProfileRepo.findOne({
+        where: { user: { id: userId } },
+      });
+      if (!profile) {
+        throw new Error(`User profile not found for user ID: ${userId}`);
+      }
+      const profileAsset = await this.assetService.readAsset(
+        profile.profilePictureUrl!,
+      );
+      if (!profileAsset) {
+        throw new Error(`Profile picture not found for user ID: ${userId}`);
+      }
+      // Assume PNG for profile pictures; adjust MIME type if needed
+      let base64ProfilePicture = `${profileAsset.toString('base64')}`;
 
-    base64ProfilePicture = base64ProfilePicture.replace(
-      /^dataimage\/pngbase64,?/i,
-      '',
-    );
-    base64ProfilePicture = `data:image/png;base64,${base64ProfilePicture}`;
-    return {
-      ...profile,
-      profilePictureUrl: base64ProfilePicture,
-    };
+      base64ProfilePicture = base64ProfilePicture.replace(
+        /^dataimage\/pngbase64,?/i,
+        '',
+      );
+      base64ProfilePicture = `data:image/png;base64,${base64ProfilePicture}`;
+      return {
+        ...profile,
+        profilePictureUrl: base64ProfilePicture,
+      };
+    } catch (error) {
+      console.error('Error in getUserProfile:', error.message);
+      throw error;
+    }
   }
 
   /**
