@@ -23,7 +23,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
                     DB_PORT: parseInt(process.env.DB_PORT || '5432', 10),
                     DB_USERNAME: process.env.DB_USERNAME || 'postgres',
                     DB_PASSWORD: process.env.DB_PASSWORD || 'postgres',
-                    DB_NAME: process.env.DB_NAME || 'd6',
+                    DB_DB: process.env.DB_DB || 'd6',
                     APPLICATION_ENCRIPTION_SEED: process.env.APPLICATION_ENCRIPTION_SEED || 'default_seed',
                     ASSET_PATH: process.env.ASSET_PATH || '/assets',
                 }
