@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Post, UseGuards } from '@nestjs/common';
 import { DailySixService } from './daily-six.service';
 import User, { UserType } from '../authentication/user.decorator';
 import { CreateDailySixDto, UpdateDailySixDto } from '../database/entities';
+import { AuthGuard } from '../authentication/auth/auth.guard';
 
+@UseGuards(AuthGuard)
 @Controller('daily-six')
 export class DailySixController {
 

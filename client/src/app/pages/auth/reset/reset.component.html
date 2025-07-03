@@ -1,0 +1,9 @@
+<form (ngSubmit)="reset()">
+  <input type="password" placeholder="Old Password" [(ngModel)]="resetData.oldPassword" name="oldPassword" required />
+  <input type="password" placeholder="New Password" [(ngModel)]="resetData.newPassword" name="newPassword" required />
+  <input type="password" placeholder="Confirm New Password" [(ngModel)]="resetData.confirmNewPassword" name="confirmNewPassword" required />
+  <input type="email" placeholder="Email" [(ngModel)]="resetData.email" name="resetEmail" required />
+  <button type="submit">Reset Password</button>
+  <div class="error" *ngIf="error">{{ error }}</div>
+  <div class="success" *ngIf="success">{{ success }}</div>
+</form>

@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import { extname, join } from "path";
+
 import { NestExpressApplication } from "@nestjs/platform-express";
 
 export function setupStatic(app: NestExpressApplication) {
-    const pubDir = join(__dirname, '..', '..', 'client', 'dist', 'client', 'browser');
+    const pubDir = join(__dirname, '..', '..', 'client', 'dist', 'browser');
     app.useStaticAssets(pubDir);
     app.setBaseViewsDir(pubDir);
 

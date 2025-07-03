@@ -1,5 +1,6 @@
-import { CommonModule } from '@angular/common';
 import { Component, signal } from '@angular/core';
+
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
@@ -16,7 +17,8 @@ export class TitleBar {
     { label: 'Daily 6', route: '/daily6', icon: '📅6' },
     { label: 'Feed', route: '/feed', icon: '📰' },
     { label: 'Profile', route: '/profile', icon: '👤' },
-    { label: 'Help', route: '/help', icon: '❓' }
+    { label: 'Help', route: '/help', icon: '❓' },
+    { label: 'Authentication', route: '/auth', icon: '🔐' },
   ]
 
   constructor(private readonly router: Router) {}

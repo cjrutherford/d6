@@ -1,1 +1,21 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <div class="photo-edit-wrapper">
+    <img class="profile-photo" [src]="isEditing() ? editedProfilePhotoUrl() : profilePhotoUrl()" alt="Profile" />
+    <button *ngIf="isEditing()" class="edit-photo-btn" (click)="photoInput.click()">Edit Photo</button>
+    <input #photoInput type="file" accept="image/*" (change)="onPhotoSelected($event)" hidden />
+  </div>
+
+  <div *ngIf="!isEditing()">
+    <h2 class="username">{{ username() }}</h2>
+    <p class="bio">{{ bio() }}</p>
+    <button class="edit-btn" (click)="onEdit()">Edit Profile</button>
+  </div>
+  <div *ngIf="isEditing()" class="edit-profile">
+    <input class="edit-username" [(ngModel)]="editedUsername" />
+    <textarea class="edit-bio" [(ngModel)]="editedBio"></textarea>
+    <div class="edit-actions">
+      <button class="save-btn" (click)="onSave()">Save</button>
+      <button class="cancel-btn" (click)="onCancel()">Cancel</button>
+    </div>
+  </div>
+</div>

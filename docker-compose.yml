@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: d6
+      POSTGRES_USER: d6
+      POSTGRES_PASSWORD: d6
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "d6"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DB: d6
+      DB_USERNAME: d6
+      DB_PASSWORD: d6
+      NODE_ENV: production
+    ports:
+      - '4000:4000'
+    volumes:
+      - /opt/assets:/assets
+      - ./client/src/assets:/app/client/dist/assets
+
+volumes:
+  pgdata:
