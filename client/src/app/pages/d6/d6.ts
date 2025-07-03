@@ -1,13 +1,18 @@
+import { StepType, Stepper } from '../../stepper/stepper';
+
 import { Component } from '@angular/core';
-import { Stepper, StepType } from '../../stepper/stepper';
+import { DailySix } from '../../services/daily-six';
 
 @Component({
   selector: 'app-d6',
   imports: [Stepper],
+  providers: [DailySix],
   templateUrl: './d6.html',
   styleUrl: './d6.scss'
 })
 export class D6 {
+
+  constructor(private readonly dailySix: DailySix) {}
 
   steps: StepType[] = [
   {
@@ -70,5 +75,24 @@ export class D6 {
     },
     canContinue: false
   }
-  ]
+  ];
+
+  onStepperComplete(answers: string[]) {
+    const [affirmation, judgement, nonJudgement, plannedPleasurable, mindfulActivity, gratitude] = answers;
+    this.dailySix.createDailySix({
+      affirmation,
+      judgement,
+      nonJudgement,
+      plannedPleasurable,
+      mindfulActivity,
+      gratitude
+    }).subscribe({
+      next: (response) => {
+        console.log('Daily Six created successfully:', response);
+      },
+      error: (error) => {
+        console.error('Error creating Daily Six:', error);
+      }
+    });
+  }
 }

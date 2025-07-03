@@ -1,14 +1,17 @@
 import { StepType, Stepper } from '../../stepper/stepper';
 
 import { Component } from '@angular/core';
+import { DailyFour } from '../../services/daily-four';
 
 @Component({
   selector: 'app-d4',
   imports: [Stepper],
+  providers: [DailyFour],
   templateUrl: './d4.html',
   styleUrl: './d4.scss'
 })
 export class D4 {
+  constructor(private readonly dailyFour: DailyFour) {}
   steps: StepType[] = [
     {
       label: 'Affirmation',
@@ -53,7 +56,20 @@ export class D4 {
   ];
 
   onStepperComplete(answers: string[]) {
-    console.log(answers.join('\n'));
+    const [affirmation, plannedPleasurable, mindfulActivity, gratitude] = answers;
+    this.dailyFour.createDailyFour({
+      affirmation,
+      plannedPleasurable,
+      mindfulActivity,
+      gratitude
+    }).subscribe({
+      next: (response) => {
+        console.log('Daily Four created successfully:', response);
+      },
+      error: (error) => {
+        console.error('Error creating Daily Four:', error);
+      }
+    });
   }
 
 }

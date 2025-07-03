@@ -1,0 +1,13 @@
+<div class="auth-container">
+  <div class="auth-tabs">
+    <ng-container *ngIf="!isLoggedIn()">
+      <a routerLink="login" routerLinkActive="active" class="tab-link">Login</a>
+      <a routerLink="register" routerLinkActive="active" class="tab-link">Register</a>
+    </ng-container>
+    <ng-container *ngIf="isLoggedIn()">
+      <a routerLink="reset" routerLinkActive="active" class="tab-link">Reset Password</a>
+      <button (click)="logout()" class="tab-link">Logout</button>
+    </ng-container>
+  </div>
+  <router-outlet></router-outlet>
+</div>

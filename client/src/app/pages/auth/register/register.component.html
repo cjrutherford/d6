@@ -1,0 +1,8 @@
+<form (ngSubmit)="register()">
+  <input type="text" placeholder="Email" [(ngModel)]="registerData.email" name="regEmail" required />
+  <input type="password" placeholder="Password" [(ngModel)]="registerData.password" name="regPassword" required />
+  <input type="password" placeholder="Confirm Password" [(ngModel)]="registerData.confirmPassword" name="regConfirmPassword" required />
+  <button type="submit">Register</button>
+  <div class="error" *ngIf="error">{{ error }}</div>
+  <div class="success" *ngIf="success">{{ success }}</div>
+</form>

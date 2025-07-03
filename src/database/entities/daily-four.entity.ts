@@ -1,4 +1,5 @@
 import { Column, Entity, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+
 import UserEntity from "./user.entity";
 
 @Entity()
@@ -31,7 +32,7 @@ export default class DailyFourEntity {
 export interface DailyFourDto {
     id: string;
     createdAt: Date;
-    user: UserEntity;
+    userId: string;
     affirmation: string;
     plannedPleasurable: string;
     mindfulActivity: string;
