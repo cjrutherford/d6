@@ -1,0 +1,28 @@
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-content {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    .section {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 10px;
+
+    }
+}
+
+.card-container {
+    display: block;
+    padding: 0;
+    margin: 10px;
+    background-color: var(--primary);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--secondary);
+}

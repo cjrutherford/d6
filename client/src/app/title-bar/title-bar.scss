@@ -31,3 +31,8 @@
         }
     }
 }
+@media (max-width: 800px) {
+    .nav-content {
+        flex-direction: column;
+    }
+}

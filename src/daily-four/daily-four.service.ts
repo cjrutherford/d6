@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CreateDailyFourDto, DailyFourEntity, UpdateDailyFourDto, UserEntity } from '../database/entities';
+import { CreateDailyFourDto, DailyFourDto, DailyFourEntity, UpdateDailyFourDto, UserEntity } from '../database/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -41,16 +41,35 @@ export class DailyFourService {
         return this.dailyFourRepository.save(dailyFour);
     }
 
-    async queryDailyFour(query: UpdateDailyFourDto): Promise<DailyFourEntity[]> {
+    async queryDailyFour(query: UpdateDailyFourDto): Promise<DailyFourDto[]> {
         const queryBuilder = this.dailyFourRepository.createQueryBuilder('dailyFour')
-            .leftJoinAndSelect('dailyFour.user', 'user');
+        .leftJoinAndSelect('dailyFour.user', 'user');
 
         if (query.public !== undefined) {
             queryBuilder.andWhere('dailyFour.public = :public', { public: query.public });
         }
         queryBuilder.orderBy('dailyFour.createdAt', 'DESC');
 
-        return queryBuilder.getMany();
+        const initialResults = await queryBuilder.getMany();
+        return initialResults.map(({ 
+            id, 
+            affirmation, 
+            mindfulActivity, 
+            gratitude,
+            plannedPleasurable,
+            public: isPublic, 
+            user, 
+            createdAt 
+        }) => ({
+            id,
+            affirmation,
+            mindfulActivity,
+            gratitude,
+            plannedPleasurable,
+            public: isPublic ?? false,
+            userId: user.id,
+            createdAt
+        }));
     }
 
     async deleteDailyFour(id: string): Promise<void> {

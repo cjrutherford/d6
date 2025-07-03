@@ -4,9 +4,12 @@ import { extname, join } from "path";
 import { NestExpressApplication } from "@nestjs/platform-express";
 
 export function setupStatic(app: NestExpressApplication) {
-    const pubDir = join(__dirname, '..', '..', 'client', 'dist', 'browser');
+    const pubDir = process.env.NODE_ENV === 'production' 
+    ? join(__dirname, '..', '..', 'client', 'dist', 'browser')
+    : join(__dirname, '..', '..', 'client', 'dist', 'client', 'browser');
     app.useStaticAssets(pubDir);
     app.setBaseViewsDir(pubDir);
+    console.log("🚀 ~ setupStatic ~ pubDir:", pubDir)
 
     app.use((req: Request, res: Response, next: NextFunction) => {
         if (req.url.startsWith('/api')) {

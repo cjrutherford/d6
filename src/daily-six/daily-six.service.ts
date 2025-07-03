@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { CreateDailySixDto, DailySixEntity, UpdateDailySixDto, UserEntity } from '../database/entities';
+import { CreateDailySixDto, DailySixDto, DailySixEntity, UpdateDailySixDto, UserEntity } from '../database/entities';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -41,16 +41,37 @@ export class DailySixService {
         return this.dailySixRepository.save(dailySix);
     }
     
-    async queryDailySix(query: UpdateDailySixDto): Promise<DailySixEntity[]> {
+    async queryDailySix(query: UpdateDailySixDto): Promise<DailySixDto[]> {
         const queryBuilder = this.dailySixRepository.createQueryBuilder('dailySix')
-            .leftJoinAndSelect('dailySix.user', 'user');
+        .leftJoinAndSelect('dailySix.user', 'user');
 
         if (query.public !== undefined) {
             queryBuilder.andWhere('dailySix.public = :public', { public: query.public });
         }
         queryBuilder.orderBy('dailySix.createdAt', 'DESC');
 
-        return queryBuilder.getMany();
+        const initialResults = await queryBuilder.getMany();
+        return initialResults.map(({
+             id, 
+             affirmation, 
+             judgement, 
+             nonJudgement, 
+             mindfulActivity,
+             gratitude,
+             public: isPublic, 
+             user,
+             createdAt 
+            }) => ({
+            id,
+            affirmation,
+            judgement,
+            nonJudgement,
+            mindfulActivity,
+            gratitude,
+            public: isPublic ?? false,
+            userId: user.id,
+            createdAt
+        })) as DailySixDto[];
     }
 
     async deleteDailySix(id: string): Promise<void> {

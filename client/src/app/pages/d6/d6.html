@@ -1,3 +1,14 @@
 <div class="card-container">
     <app-stepper [questions]="steps" (completed)="onStepperComplete($event)"></app-stepper>
 </div>
+
+<div class="modal-container" *ngIf="showCompletionModal">
+    <div class="modal-content">
+        <h2>Congratulations!</h2>
+        <p>You have completed the D6 module.</p>
+
+        <p>Would you like to make this a public Post?</p>
+        <button (click)="setPostComplete(true)">Yes</button>
+        <button (click)="setPostComplete(false)">No</button>
+    </div>
+</div>

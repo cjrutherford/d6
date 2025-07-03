@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+
 import UserEntity from "./user.entity";
 
 @Entity()
@@ -37,7 +38,7 @@ export default class DailySixEntity {
 export interface DailySixDto {
     id: string;
     createdAt: Date;
-    userId: number;
+    userId: string;
     affirmation: string;
     plannedPleasurable: string;
     judgement: string;
