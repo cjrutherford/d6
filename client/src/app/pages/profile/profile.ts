@@ -37,7 +37,7 @@ export class Profile {
   editedProfilePhotoUrl = signal(this.profilePhotoUrl());
 
   loadProfile() {
-    this.users.getUsers().subscribe({
+    this.userProfile.getUserProfile().subscribe({
       next: (profile: ProfileType) => {
         if (profile) {
           this.username.set(profile.name ?? 'johndoe');
