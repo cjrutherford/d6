@@ -15,7 +15,7 @@ export class PromptEngineeringService {
             User Input: ${userInput}
             Please keep your response to a single paragraph.
             Provide an up or down value to determine if the user input is a good response to the prompt. (the up down value should be "response: "up" or "down" ")
-            The response already requested should be a down value if the user input is not a good response like not followning the prompt, or not being constructive.
+            The response already requested should be a down value if the user input is not a good response like not following the prompt, or not being constructive.
             only provide the up/down response value once and only at the end of your response.
         `;
         return promptStructure;
