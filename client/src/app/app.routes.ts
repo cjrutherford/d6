@@ -13,9 +13,9 @@ export const routes: Routes = [
     { path: 'about', component: About },
     { path: 'daily4', component: D4, canActivate: [AuthGuard] },
     { path: 'daily6', component: D6, canActivate: [AuthGuard] },
-    { path: '', component: Feed, canActivate: [AuthGuard] },
+    { path: 'feed', component: Feed, canActivate: [AuthGuard] },
     { path: 'profile', component: Profile, canActivate: [AuthGuard] },
     // { path: 'help', component: Help, canActivate: [AuthGuard] },
     { path: 'auth', component: AuthPage, children: authRoutes},
-    { path: '**', redirectTo: '', pathMatch: 'full' } // Redirect to home for any unknown routes
+    { path: '**', redirectTo: 'about', pathMatch: 'full' } // Redirect to home for any unknown routes
 ];
