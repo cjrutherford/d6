@@ -1,7 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map } from 'rxjs';
-
 export declare type PromptType = 'affirmation' | 'judgement' | 'nonJudgement' | 'mindfulActivity' | 'gratitude' | 'plannedPleasurable';
 
 @Injectable({
