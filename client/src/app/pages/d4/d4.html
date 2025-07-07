@@ -1,5 +1,5 @@
 <div class="card-container">
-    <app-stepper [questions]="steps" (completed)="onStepperComplete($event)"></app-stepper>
+    <app-stepper [questions]="steps()" (stepUpdate)="updateStep($event)" (completed)="onStepperComplete($event)"></app-stepper>
 </div>
 <div class="modal-container" *ngIf="showCompletionModal">
     <div class="modal-content">
@@ -9,5 +9,10 @@
         <p>Would you like to make this a public Post?</p>
         <button (click)="setPostComplete(true)">Yes</button>
         <button (click)="setPostComplete(false)">No</button>
+    </div>
+</div>
+<div class="modal-container" *ngIf="loading()">
+    <div class="modal-content">
+        <app-loading [variant]="'bar'"></app-loading>
     </div>
 </div>

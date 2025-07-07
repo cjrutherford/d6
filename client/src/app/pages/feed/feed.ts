@@ -5,6 +5,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { DailyFourDto } from '../../services/daily-four';
 import { DailySixDto } from '../../services/daily-six';
 import { FeedService } from '../../services/feed';
+import { TitlePipe } from '../../title-pipe';
 import { UserProfile } from '../../services/user-profile';
 
 export type DailyPostDto = {
@@ -19,7 +20,7 @@ export type DailyPostDto = {
 
 @Component({
   selector: 'app-feed',
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, TitlePipe],
   providers: [FeedService],
   templateUrl: './feed.html',
   styleUrl: './feed.scss',

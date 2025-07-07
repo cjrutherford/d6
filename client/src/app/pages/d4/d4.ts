@@ -1,66 +1,61 @@
+import { Analysis, PromptType } from '../../services/analysis';
 import { StepType, Stepper } from '../../stepper/stepper';
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DailyFour } from '../../services/daily-four';
+import { Loading } from '../../loading/loading';
 import { Router } from '@angular/router';
+import { signal } from '@angular/core';
 
 @Component({
   selector: 'app-d4',
-  imports: [CommonModule, Stepper],
-  providers: [DailyFour],
+  imports: [CommonModule, Stepper, Loading],
+  providers: [DailyFour, Analysis],
   templateUrl: './d4.html',
   styleUrl: './d4.scss'
 })
 export class D4 {
-  constructor(private readonly dailyFour: DailyFour, private readonly router: Router) {}
-
+  constructor(
+    private readonly dailyFour: DailyFour, 
+    private readonly router: Router,
+    private readonly analysis: Analysis
+  ) {}
+  loading = signal<boolean>(false);
   answers: string[] = [];
   publicPost = false;
   showCompletionModal = false;
 
-  steps: StepType[] = [
+  steps = signal<StepType[]>([
     {
+      name: 'affirmation',
       label: 'Affirmation',
       question: 'Provide a small affirmation for yourself.',
       description: 'This can be anything positive about yourself, or something you find inspirational.',
-      action: (answer: string, question: StepType) => {
-        console.log('Affirmation:', answer);
-        question.canContinue = true;
-      },
       canContinue: false,
     },
     {
+      name: 'plannedPleasurable',
       label: 'Planned Pleasurable',
       question: 'What is something pleasurable you plan to do today?',
       description: 'this can be a small activity that brings you joy, like reading a book or going for a walk.',
-      action: (answer: string, question: StepType) => {
-        console.log('Planned Pleasurable:', answer);
-        question.canContinue = true;
-      },
       canContinue: false,
     },
     {
+      name: 'mindfulActivity',
       label: 'Mindful Activity',
       question: 'What is something you plan to do today that is mindful?',
       description: 'This can be anything that helps you stay present and engaged, like meditation or deep breathing. It can be a mundane task or chore that you plan to do with all your presence.',
-      action: (answer: string, question: StepType) => {
-        console.log('Mindful Activity selected:', answer);
-        question.canContinue = true;
-      },
       canContinue: false,
     },
     {
+      name: 'gratitude',
       label: 'Gratitude',
       question: 'What is something you are grateful for today?',
       description: 'This can be anything that brings you joy or happiness, like a friend, family member, or pet.',
-      action: (answer: string, question: StepType) => {
-        console.log('Gratitude:', answer);
-        question.canContinue = true;
-      },
       canContinue: false
     }
-  ];
+  ]);
 
   setPostComplete(isPublic: boolean) {
     this.publicPost = isPublic;
@@ -81,6 +76,36 @@ export class D4 {
         this.showCompletionModal = false;
       }
     });
+  }
+
+  updateStep(step: StepType) {
+    this.loading.set(true);
+    console.log('Updating step:', step);
+    const currentStep = this.steps().findIndex(s => s.question === step.question);
+    console.log('Current step index:', currentStep);
+    if (currentStep !== -1) {
+      const allSteps = [...this.steps()];
+      this.analysis.analyzeResponse(step.question, step.name as PromptType).subscribe({
+        next: (response) => {
+          console.log('Response from analysis:', response);
+          step.response = response.response;
+          step.canContinue = response.isGoodResponse;
+          console.log('Step after analysis:', step);
+          allSteps[currentStep] = step;
+          this.steps.set(allSteps);
+          console.log('Updated steps:', this.steps());
+          this.loading.set(false);
+        },
+        error: (error) => {
+          console.error('Error analyzing response:', error);
+          step.response = 'There appears to be something wrong with your response.';
+          step.canContinue = false;
+          allSteps[currentStep] = step;
+          this.steps.set(allSteps);
+          this.loading.set(false);
+        }
+      });
+    }
   }
 
   onStepperComplete(answers: string[]) {

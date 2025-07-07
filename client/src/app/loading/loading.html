@@ -1,0 +1,18 @@
+<ng-container [ngSwitch]="variant">
+  <div *ngSwitchCase="'spinner'" class="loader spinner">
+    <div class="double-bounce1"></div>
+    <div class="double-bounce2"></div>
+  </div>
+  <div *ngSwitchCase="'dots'" class="loader dots">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+  <div *ngSwitchCase="'bar'" class="loader bar">
+    <div class="bar-inner"></div>
+  </div>
+  <div *ngSwitchDefault class="loader spinner">
+    <div class="double-bounce1"></div>
+    <div class="double-bounce2"></div>
+  </div>
+</ng-container>
