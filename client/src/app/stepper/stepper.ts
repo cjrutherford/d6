@@ -4,12 +4,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 export class StepType {
+  name: string = '';
   label?: string;
   question: string = '';
   description: string = '';
   response?: string;
-  action?: (answer: string, question: StepType) => void;
   canContinue: boolean = false;
+  answer?: string;
 }
 
 @Component({
@@ -21,6 +22,7 @@ export class StepType {
 })
 export class Stepper {
   @Input() questions: StepType[] = [];
+  @Output() stepUpdate = new EventEmitter<StepType>();
   @Output() stepChange = new EventEmitter<number>();
   @Output() completed = new EventEmitter<any>();
 
@@ -46,16 +48,8 @@ export class Stepper {
 
   processStepAction(){
     const currentStep = this.questions[this.currentStep]
-    const action = currentStep.action;
-    if(!action) {
-      throw new Error('Action is not valid: ' + action)
-    }
-    const answer = this.answers[this.currentStep];
-    if(!answer) {
-      throw new Error('Answer is not valid: '+ answer)
-    }
-   
-    action(answer, currentStep)
+    currentStep.answer = this.answers[this.currentStep];
+    this.stepUpdate.emit(currentStep);
   }
 
   prevStep() {

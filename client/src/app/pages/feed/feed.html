@@ -2,7 +2,7 @@
     @for(post of posts(); track post.id) {
         <div class="content-card">
             <div class="post-header">
-                <img [src]="post.userAvatar" alt="">
+                <img [src]="post.userAvatar" alt="{{post.userName}}-avatar" width="50" height="50" class="avatar">
                 <h2 class="post-title">{{ post.userName }}</h2>
             </div>
             <div class="post-content">
