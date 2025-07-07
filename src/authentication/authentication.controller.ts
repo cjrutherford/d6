@@ -42,7 +42,7 @@ export class AuthenticationController {
      * @returns An object containing a success message
      */
     @Post('register')
-    async register(@Body() createUserDto: CreateUserDto, @Res() response: Response): Promise<{message: string}> {
+    async register(@Body() createUserDto: CreateUserDto): Promise<{message: string}> {
         try{
             const message = await this.authService.register(createUserDto.email, createUserDto.password, createUserDto.confirmPassword);
             return { message}

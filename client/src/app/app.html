@@ -1,5 +1,15 @@
 <app-title-bar>
-</app-title-bar>
+</app-title-bar>  
+<div class="message-container" *ngIf="messages().length > 0">
+    @for(message of messages(); track $index) {
+      <div class="message" [ngClass]="message.type">
+        <span class="message-text">{{ message.content }}</span>
+        <button class="close-button" (click)="removeMessage($index)" [attr.aria-label]="'Close message'">
+          <span class="icon">❌</span>
+        </button>
+      </div>
+    }
+</div>
 <router-outlet />
 <div *ngIf="!showThemePicker()" class="theme-picker-bubble">
     <button width="40px" class="theme-toggle" (click)="toggleThemePicker()" [attr.aria-label]="showThemePicker() ? 'Hide theme picker' : 'Show theme picker'">

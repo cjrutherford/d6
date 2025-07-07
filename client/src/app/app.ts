@@ -2,6 +2,7 @@ import { Component, computed, effect, signal } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { MessageService } from './services/message';
 import { RouterOutlet } from '@angular/router';
 import { TitleBar } from './title-bar/title-bar';
 
@@ -38,9 +39,8 @@ export declare type MessageType = {
   },
 })
 export class App {
+  messages = signal<MessageType[]>([]);
   showThemePicker = signal(false);
-  messages = signal<MessageType[]>([
-  ]);
   themes: ThemeType[] = [ {
       name: "Sunny Day",
       light: [
@@ -347,7 +347,7 @@ export class App {
   ];
 
   // Signals for theme state
-  selectedTheme = signal<ThemeType>(this.themes[0]);
+  selectedTheme = signal<ThemeType>(this.themes[11]);
   themeMode = signal<'light' | 'dark'>('light');
 
   // Computed signal for current palette
@@ -368,14 +368,17 @@ export class App {
   }
 
   removeMessage(index: number) {
-    console.log("Removing message at index:", index);
+    this.messageService.dismiss(index);
   }
   
-  constructor() {
+  constructor(private readonly messageService: MessageService) {
     this.loadThemeSettings();
     // Effect to apply theme whenever selectedTheme or themeMode changes
     effect(() => {
       this.applyTheme();
+      this.messageService.messages$().subscribe(messages => {
+        this.messages.set(messages);
+      });
     });
   }
 

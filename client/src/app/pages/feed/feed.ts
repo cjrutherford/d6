@@ -5,6 +5,7 @@ import { firstValueFrom, map } from 'rxjs';
 import { DailyFourDto } from '../../services/daily-four';
 import { DailySixDto } from '../../services/daily-six';
 import { FeedService } from '../../services/feed';
+import { MessageService } from '../../services/message';
 import { TitlePipe } from '../../title-pipe';
 import { UserProfile } from '../../services/user-profile';
 
@@ -27,9 +28,12 @@ export type DailyPostDto = {
 })
 export class Feed {
   posts = signal<DailyPostDto[]>([]);
-  constructor(private readonly feedService: FeedService, private readonly users: UserProfile) {
-  }
-  
+  constructor(
+    private readonly feedService: FeedService,
+    private readonly users: UserProfile,
+    private readonly messageService: MessageService
+  ) {}
+
   ngOnInit() {
     this.initializeFeed();
   }
@@ -41,6 +45,10 @@ export class Feed {
       },
       error: (error) => {
         console.error('Error loading posts:', error);
+        this.messageService.addMessage({
+          type: 'error',
+          content: 'Failed to load posts. Please try again later. Error: ' + error.message,
+        });
       },
     });
   }

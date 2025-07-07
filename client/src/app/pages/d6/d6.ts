@@ -5,6 +5,7 @@ import { StepType, Stepper } from '../../stepper/stepper';
 import { CommonModule } from '@angular/common';
 import { DailySix } from '../../services/daily-six';
 import { Loading } from '../../loading/loading';
+import { MessageService } from '../../services/message';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,7 +20,8 @@ export class D6 {
   constructor(
     private readonly dailySix: DailySix,
     private readonly router: Router,
-    private readonly analysis: Analysis
+    private readonly analysis: Analysis,
+    private readonly messageService: MessageService
   ) {}
   loading = signal<boolean>(false);
   answers: string[] = [];
@@ -91,6 +93,10 @@ export class D6 {
       error: (error) => {
         console.error('Error creating Daily Six:', error);
         this.showCompletionModal = false;
+        this.messageService.addMessage({
+          type: 'error',
+          content: 'Failed to create Daily Six. Please try again later. Error: ' + error.message,
+        });
       }
     });
   }
@@ -115,6 +121,10 @@ export class D6 {
           allSteps[currentStepIndex] = step;
           this.steps.set(allSteps);
           this.loading.set(false);
+          this.messageService.addMessage({
+            type: 'error',
+            content: 'Failed to analyze response. Please try again later. Error: ' + error.message,
+          });
         }
       });
     }
