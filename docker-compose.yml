@@ -24,13 +24,16 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    network_mode: host
     environment:
-      DB_HOST: db
+      DB_HOST: 127.0.0.1
       DB_PORT: 5432
       DB_DB: d6
       DB_USERNAME: d6
       DB_PASSWORD: d6
       NODE_ENV: production
+      LLAMA_HOST: 127.0.0.1
+      LLAMA_PORT: 11434
     ports:
       - '4000:4000'
     volumes:

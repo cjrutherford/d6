@@ -8,6 +8,8 @@
     margin-top: 10px;
     display: flex;
     flex-direction: column;
+    justify-content: stretch;
+    width: 100%;
     flex-wrap: wrap;
     .section {
         display: flex;
@@ -16,6 +18,13 @@
         margin-bottom: 10px;
 
     }
+}
+
+.post-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
 }
 
 .card-container {

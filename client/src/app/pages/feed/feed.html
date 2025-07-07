@@ -8,7 +8,7 @@
             <div class="post-content">
                 @for(prompt of getPrompts(post); track prompt) {
                     <div class="section">
-                        <strong>{{ prompt[0] }}:</strong>
+                        <strong>{{ prompt[0] | title }}:</strong>
                         <p>{{ prompt[1]}}</p>
                     </div>
                 }
