@@ -6,7 +6,7 @@ export declare type PromptContextType = 'affirmation' | 'plannedPleasurable' | '
 export class PromptEngineeringService {
 
     generatePrompt(userInput: string, context: string): string {
-        // start by definiing the structure of the prompt
+        // start by defining the structure of the prompt
         const promptStructure = `
             You are an AI assistant designed to help with ${context}.
             You are versed in the skills of Dialectical Behavior Therapy (DBT) and Cognitive Behavioral Therapy (CBT).
