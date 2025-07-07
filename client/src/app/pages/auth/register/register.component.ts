@@ -28,6 +28,10 @@ export class RegisterComponent {
       next: (responseData: {message: string}) => {
         this.success = `${responseData.message}! Please log in.`;
         this.error = '';
+        this.messageService.addMessage({
+          content: this.success,
+          type: 'success'
+        });
         this.router.navigate(['/auth/login']);
       },
       error: err => this.messageService.addMessage({

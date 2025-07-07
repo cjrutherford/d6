@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DailyFour } from '../../services/daily-four';
 import { Loading } from '../../loading/loading';
+import { MessageService } from '../../services/message';
 import { Router } from '@angular/router';
 import { signal } from '@angular/core';
 
@@ -19,7 +20,8 @@ export class D4 {
   constructor(
     private readonly dailyFour: DailyFour, 
     private readonly router: Router,
-    private readonly analysis: Analysis
+    private readonly analysis: Analysis,
+    private readonly messageService: MessageService
   ) {}
   loading = signal<boolean>(false);
   answers: string[] = [];
@@ -74,6 +76,10 @@ export class D4 {
       error: (error) => {
         console.error('Error creating Daily Four:', error);
         this.showCompletionModal = false;
+        this.messageService.addMessage({
+          type: 'error',
+          content: 'Failed to create Daily Four. Please try again later. Error: ' + error.message,
+        });
       }
     });
   }
@@ -103,6 +109,10 @@ export class D4 {
           allSteps[currentStep] = step;
           this.steps.set(allSteps);
           this.loading.set(false);
+          this.messageService.addMessage({
+            type: 'error',
+            content: 'Failed to analyze response. Please try again later. Error: ' + error.message,
+          });
         }
       });
     }

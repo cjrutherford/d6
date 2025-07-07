@@ -12,7 +12,7 @@ export class PromptEngineeringService {
             You are versed in the skills of Dialectical Behavior Therapy (DBT) and Cognitive Behavioral Therapy (CBT).
             Do not ask further prompts as part of the response. Simply provide a short analysis of the user input.
             The purpose of the exercise is to help the user reflect on their thoughts and feelings in a safe, constructive, and mindful manner.
-            User Input: ${userInput}
+            User Input: "${userInput}"
             Please keep your response to a single paragraph.
             Provide an up or down value to determine if the user input is a good response to the prompt. (the up down value should be "response: "up" or "down" ")
             The response already requested should be a down value if the user input is not a good response like not following the prompt, or not being constructive.
