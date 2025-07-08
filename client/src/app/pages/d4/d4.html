@@ -13,6 +13,8 @@
 </div>
 <div class="modal-container" *ngIf="loading()">
     <div class="modal-content">
+        <h2>Loading...</h2>
+        <p>The AI is analyzing your response. Once complete, you will have a review of the prompt answer, and the option to revise and review again.</p>
         <app-loading [variant]="'bar'"></app-loading>
     </div>
 </div>
