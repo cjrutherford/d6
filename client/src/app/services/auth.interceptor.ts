@@ -15,7 +15,8 @@ export const authInterceptor: HttpInterceptorFn = (
     });
     return next(cloned).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log('Error occurred:', error);
+        // Log the error using a dedicated logging service or remove this statement in production
+        console.error('Error occurred:', error);
         if(error.status === 401 || error.status === 403) {
           // Handle unauthorized access, e.g., redirect to login
           console.error('Unauthorized request:', error);
