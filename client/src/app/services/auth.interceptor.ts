@@ -21,7 +21,8 @@ export const authInterceptor: HttpInterceptorFn = (
           console.error('Unauthorized request:', error);
           // Optionally, you can redirect to a login page or show a notification
           localStorage.removeItem('authToken');
-          window.location.href = '/auth/login';
+          const router = inject(Router);
+          router.navigate(['/auth/login']);
         }
         // Return an observable to satisfy the catchError contract
         return throwError(() => error);
