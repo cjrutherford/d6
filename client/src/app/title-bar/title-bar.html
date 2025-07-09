@@ -3,14 +3,14 @@
     <div class="heading-row text-center">
         <img src="assets/icon.png" width="50px" alt="">
         <h2>Daily Reflections</h2>
-        <button (click)="toggleNav()"><span class="icon">☰</span></button>
+        <button class="nav-toggle" (click)="toggleNav()"><span class="icon">☰</span></button>
     </div>
-    <div class="nav-row">
-        <div class="nav-content" *ngIf="showNav()">
-            <button *ngFor="let item of navItems" (click)="navigateTo(item.route)" class="nav-btn">
-                <span class="icon">{{ item.icon }}</span>
-                <span>{{ item.label }}</span>
-            </button>
-        </div>
+</div>
+<div class="nav-row">
+    <div class="nav-content" *ngIf="showNav()">
+        <button *ngFor="let item of navItems" (click)="navigateTo(item.route)" class="nav-btn">
+            <span class="icon">{{ item.icon }}</span>
+            <span>{{ item.label }}</span>
+        </button>
     </div>
 </div>
