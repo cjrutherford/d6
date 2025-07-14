@@ -42,7 +42,7 @@ describe('AuthenticationController', () => {
     const result = await controller.login(loginDto as any);
 
     expect(mockAuthService.login).toHaveBeenCalledWith(loginDto.email, loginDto.password);
-    expect(result).toBe(expectedResult);
+    expect(result).toEqual({ token: expectedResult });
   });
 
   it('should call authService.register with correct params and return result', async () => {
@@ -57,7 +57,7 @@ describe('AuthenticationController', () => {
       createUserDto.password,
       createUserDto.confirmPassword
     );
-    expect(result).toBe(expectedResult);
+    expect(result).toEqual({ message: expectedResult });
   });
 
   it('should call authService.resetPassword with correct params and return result', async () => {
@@ -78,17 +78,17 @@ describe('AuthenticationController', () => {
       resetUserPasswordDto.newPassword,
       resetUserPasswordDto.confirmNewPassword
     );
-    expect(result).toBe(expectedResult);
+    expect(result).toEqual({ message: expectedResult });
   });
 
   it('should call authService.logout with correct param and return result', async () => {
     const token = 'logout-token';
-    const expectedResult = 'logged out';
-    mockAuthService.logout!.mockResolvedValue(expectedResult);
+    const expectedResult = { message: 'logged out' };
+    mockAuthService.logout!.mockResolvedValue(expectedResult.message);
 
     const result = await controller.logout(token);
 
     expect(mockAuthService.logout).toHaveBeenCalledWith(token);
-    expect(result).toBe(expectedResult);
+    expect(result).toEqual(expectedResult);
   });
 });

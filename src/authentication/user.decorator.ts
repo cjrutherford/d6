@@ -18,7 +18,8 @@ const User = createParamDecorator(
     async (data: unknown, ctx) => {
         const request = ctx.switchToHttp().getRequest();
         // Extract the JWT token from the Authorization header
-        const token = (request.headers['authorization'] ?? request.headers['Authorization']).split(' ')[1];
+        const authHeader = request.headers['authorization'] ?? request.headers['Authorization'];
+        const token = authHeader ? authHeader.split(' ')[1] : undefined;
 
         if (!token) {
             throw new Error("No token provided");

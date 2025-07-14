@@ -4,7 +4,7 @@
 import { AuthGuard } from './auth/auth.guard';
 import { AuthService } from './auth/auth.service';
 import { AuthenticationController } from './authentication.controller';
-import { InternalConfigModule } from 'src/internal-config/internal-config.module';
+import { InternalConfigModule } from '../internal-config/internal-config.module';
 import { Module } from '@nestjs/common';
 
 @Module({

@@ -12,10 +12,10 @@ import { PromptEngineeringService } from './prompt-engineering/prompt-engineerin
     PromptEngineeringService,
     {
       provide: 'LlamaOptions',
-      useValue: {
+      useFactory: () => ({
         host: process.env.LLAMA_HOST ?? 'localhost',
         port: process.env.LLAMA_PORT ? parseInt(process.env.LLAMA_PORT, 10) : 11434,
-      }
+      }),
     }
   ]
 })

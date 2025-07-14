@@ -1,31 +1,20 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Debug Jest Tests",
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
-            "skipFiles": [
-                "<node_internals>/**"
+            "runtimeArgs": [
+                "--inspect-brk",
+                "${workspaceRoot}/node_modules/.bin/jest",
+                "--runInBand",
+                "--config",
+                "jest.config.ts"
             ],
-            "program": "${workspaceFolder}/src/main.ts",
-            "outFiles": [
-                "${workspaceFolder}/dist/**/*.js"
-            ],
-            "env": {
-                "NODE_ENV": "development",
-                "DB_HOST": "localhost",
-                "DB_PORT": "5432",
-                "DB_USERNAME": "d6",
-                "DB_PASSWORD": "d6",
-                "DB_NAME": "d6",
-                "ASSET_PATH": "../assets",
-            },
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen",
+            "port": 9229
         }
     ]
-
 }

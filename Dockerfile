@@ -21,6 +21,7 @@ RUN npm run build -- --output-path=dist
 
 # Production image
 FROM node:20-slim AS prod
+ARG NODE_ENV=production
 WORKDIR /app
 
 # Copy backend build output
@@ -31,6 +32,6 @@ COPY --from=build /app/dist ./dist
 # Copy frontend build output
 COPY --from=build /app/client/dist ./client/dist
 
-ENV NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 EXPOSE 4000
-CMD ["node", "dist/src/main.js"]
+CMD ["node", "dist/src/main.js", "--env", "${NODE_ENV}"]

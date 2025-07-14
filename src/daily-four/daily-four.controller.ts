@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Patch, Post, UseGuards } from '@nestjs/common';
 import { DailyFourService } from './daily-four.service';
-import { AuthGuard } from 'src/authentication/auth/auth.guard';
-import User, { UserType } from 'src/authentication/user.decorator';
+import { AuthGuard } from '../authentication/auth/auth.guard';
+import User, { UserType } from '../authentication/user.decorator';
 import { CreateDailyFourDto, UpdateDailyFourDto } from '../database/entities';
 
 @UseGuards(AuthGuard)
