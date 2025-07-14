@@ -6,6 +6,8 @@ import { AssetService } from '../asset/asset.service';
 
 describe('UsersService', () => {
   let service: UsersService;
+  let userProfileRepo: any;
+  let assetService: any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -13,16 +15,27 @@ describe('UsersService', () => {
         UsersService,
         {
           provide: getRepositoryToken(UserProfileEntity),
-          useValue: {}, // Provide a mock implementation as needed
+          useValue: {
+            findOne: jest.fn(),
+            create: jest.fn(),
+            save: jest.fn(),
+            remove: jest.fn(),
+          },
         },
         {
           provide: AssetService,
-          useValue: {}, // Provide a mock implementation as needed
+          useValue: {
+            readAsset: jest.fn(),
+            saveAsset: jest.fn(),
+            deleteAsset: jest.fn(),
+          },
         },
       ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
+    userProfileRepo = module.get(getRepositoryToken(UserProfileEntity));
+    assetService = module.get(AssetService);
   });
 
   it('should be defined', () => {
@@ -32,24 +45,22 @@ describe('UsersService', () => {
   describe('getUserProfile', () => {
     it('should return user profile with base64 profile picture', async () => {
       const userId = '123';
-      const mockProfile = { id: userId, profilePictureUrl: 'profile.png' };
+      const mockProfile = { userId, profilePictureUrl: 'profile.png' };
       const mockBuffer = Buffer.from('imagebinary');
-      const userProfileRepo = service['userProfileRepo'];
-      const assetService = service['assetService'];
 
-      userProfileRepo.findOne = jest.fn().mockResolvedValue(mockProfile);
-      assetService.readAsset = jest.fn().mockResolvedValue(mockBuffer);
+      userProfileRepo.findOne.mockResolvedValue(mockProfile);
+      assetService.readAsset.mockResolvedValue(mockBuffer);
 
       const result = await service.getUserProfile(userId);
 
-      expect(userProfileRepo.findOne).toHaveBeenCalledWith({ where: { id: userId } });
+      expect(userProfileRepo.findOne).toHaveBeenCalledWith({ where: { user: { id: userId } } });
       expect(assetService.readAsset).toHaveBeenCalledWith('profile.png');
-      expect(result.profilePictureUrl).toBe(mockBuffer.toString('base64'));
+      expect(result.profilePictureUrl).toBe(`data:image/png;base64,${mockBuffer.toString('base64')}`);
     });
 
     it('should throw if user profile not found', async () => {
       const userId = 'notfound';
-      service['userProfileRepo'].findOne = jest.fn().mockResolvedValue(undefined);
+      userProfileRepo.findOne.mockResolvedValue(undefined);
 
       await expect(service.getUserProfile(userId)).rejects.toThrow(
         `User profile not found for user ID: ${userId}`
@@ -58,9 +69,9 @@ describe('UsersService', () => {
 
     it('should throw if profile picture asset not found', async () => {
       const userId = '123';
-      const mockProfile = { id: userId, profilePictureUrl: 'profile.png' };
-      service['userProfileRepo'].findOne = jest.fn().mockResolvedValue(mockProfile);
-      service['assetService'].readAsset = jest.fn().mockResolvedValue(undefined);
+      const mockProfile = { userId, profilePictureUrl: 'profile.png' };
+      userProfileRepo.findOne.mockResolvedValue(mockProfile);
+      assetService.readAsset.mockResolvedValue(undefined);
 
       await expect(service.getUserProfile(userId)).rejects.toThrow(
         `Profile picture not found for user ID: ${userId}`
@@ -75,13 +86,10 @@ describe('UsersService', () => {
       const profileData = { profilePictureUrl: base64Pic, name: 'Test' };
       const mockProfile = { ...profileData, userId, profilePictureUrl: 'profile-456.png' };
 
-      const userProfileRepo = service['userProfileRepo'];
-      const assetService = service['assetService'];
-
-      userProfileRepo.findOne = jest.fn().mockResolvedValue(undefined);
-      assetService.saveAsset = jest.fn().mockResolvedValue('profile-456.png');
-      userProfileRepo.create = jest.fn().mockReturnValue(mockProfile);
-      userProfileRepo.save = jest.fn().mockResolvedValue(mockProfile);
+      userProfileRepo.findOne.mockResolvedValue(undefined);
+      assetService.saveAsset.mockResolvedValue('profile-456.png');
+      userProfileRepo.create.mockReturnValue(mockProfile);
+      userProfileRepo.save.mockResolvedValue(mockProfile);
 
       const result = await service.createUserProfile(userId, profileData);
 
@@ -94,7 +102,7 @@ describe('UsersService', () => {
 
     it('should throw if user profile already exists', async () => {
       const userId = '789';
-      service['userProfileRepo'].findOne = jest.fn().mockResolvedValue({ userId });
+      userProfileRepo.findOne.mockResolvedValue({ userId });
 
       await expect(
         service.createUserProfile(userId, { profilePictureUrl: 'abc' })
@@ -103,11 +111,31 @@ describe('UsersService', () => {
 
     it('should throw if profile picture is missing', async () => {
       const userId = '999';
-      service['userProfileRepo'].findOne = jest.fn().mockResolvedValue(undefined);
+      userProfileRepo.findOne.mockResolvedValue(undefined);
 
       await expect(
         service.createUserProfile(userId, {})
       ).rejects.toThrow('Profile picture is required');
+    });
+
+    it('should create and return new user profile when base64 string starts with data:', async () => {
+      const userId = '777';
+      const base64PicWithPrefix = `data:image/png;base64,${Buffer.from('pic_with_prefix').toString('base64')}`;
+      const profileData = { profilePictureUrl: base64PicWithPrefix, name: 'Test With Prefix' };
+      const mockProfile = { ...profileData, userId, profilePictureUrl: 'profile-777.png' };
+
+      userProfileRepo.findOne.mockResolvedValue(undefined);
+      assetService.saveAsset.mockResolvedValue('profile-777.png');
+      userProfileRepo.create.mockReturnValue(mockProfile);
+      userProfileRepo.save.mockResolvedValue(mockProfile);
+
+      const result = await service.createUserProfile(userId, profileData);
+
+      expect(userProfileRepo.findOne).toHaveBeenCalledWith({ where: { user: { id: userId }} });
+      expect(assetService.saveAsset).toHaveBeenCalled();
+      expect(userProfileRepo.create).toHaveBeenCalled();
+      expect(userProfileRepo.save).toHaveBeenCalledWith(mockProfile);
+      expect(result).toEqual(mockProfile);
     });
   });
 
@@ -119,13 +147,10 @@ describe('UsersService', () => {
       const profileData = { profilePictureUrl: newBase64, name: 'New' };
       const updatedProfile = { ...oldProfile, ...profileData, profilePictureUrl: 'new.png' };
 
-      const userProfileRepo = service['userProfileRepo'];
-      const assetService = service['assetService'];
-
-      userProfileRepo.findOne = jest.fn().mockResolvedValue({ ...oldProfile });
-      assetService.deleteAsset = jest.fn().mockResolvedValue(undefined);
-      assetService.saveAsset = jest.fn().mockResolvedValue('new.png');
-      userProfileRepo.save = jest.fn().mockResolvedValue(updatedProfile);
+      userProfileRepo.findOne.mockResolvedValue({ ...oldProfile });
+      assetService.deleteAsset.mockResolvedValue(undefined);
+      assetService.saveAsset.mockResolvedValue('new.png');
+      userProfileRepo.save.mockResolvedValue(updatedProfile);
 
       const result = await service.updateUserProfile(userId, profileData);
 
@@ -141,9 +166,8 @@ describe('UsersService', () => {
       const profileData = { name: 'Updated' };
       const updatedProfile = { ...oldProfile, ...profileData };
 
-      const userProfileRepo = service['userProfileRepo'];
-      userProfileRepo.findOne = jest.fn().mockResolvedValue({ ...oldProfile });
-      userProfileRepo.save = jest.fn().mockResolvedValue(updatedProfile);
+      userProfileRepo.findOne.mockResolvedValue({ ...oldProfile });
+      userProfileRepo.save.mockResolvedValue(updatedProfile);
 
       const result = await service.updateUserProfile(userId, profileData);
 
@@ -153,11 +177,29 @@ describe('UsersService', () => {
 
     it('should throw if user profile not found', async () => {
       const userId = 'notfound';
-      service['userProfileRepo'].findOne = jest.fn().mockResolvedValue(undefined);
+      userProfileRepo.findOne.mockResolvedValue(undefined);
 
       await expect(
         service.updateUserProfile(userId, { name: 'Test' })
       ).rejects.toThrow(`User profile not found for user ID: ${userId}`);
+    });
+
+    it('should update profile and save new picture if existingProfile does not have a profilePictureUrl', async () => {
+      const userId = '888';
+      const oldProfile = { userId, name: 'Old' };
+      const newBase64 = Buffer.from('newpic_no_old').toString('base64');
+      const profileData = { profilePictureUrl: newBase64, name: 'New' };
+      const updatedProfile = { ...oldProfile, ...profileData, profilePictureUrl: 'new.png' };
+
+      userProfileRepo.findOne.mockResolvedValue({ ...oldProfile });
+      assetService.saveAsset.mockResolvedValue('new.png');
+      userProfileRepo.save.mockResolvedValue(updatedProfile);
+
+      const result = await service.updateUserProfile(userId, profileData);
+
+      expect(assetService.saveAsset).toHaveBeenCalled();
+      expect(userProfileRepo.save).toHaveBeenCalled();
+      expect(result).toEqual(updatedProfile);
     });
   });
 
@@ -165,12 +207,10 @@ describe('UsersService', () => {
     it('should delete user profile and its picture', async () => {
       const userId = '111';
       const profile = { userId, profilePictureUrl: 'pic.png' };
-      const userProfileRepo = service['userProfileRepo'];
-      const assetService = service['assetService'];
 
-      userProfileRepo.findOne = jest.fn().mockResolvedValue(profile);
-      assetService.deleteAsset = jest.fn().mockResolvedValue(undefined);
-      userProfileRepo.remove = jest.fn().mockResolvedValue(undefined);
+      userProfileRepo.findOne.mockResolvedValue(profile);
+      assetService.deleteAsset.mockResolvedValue(undefined);
+      userProfileRepo.remove.mockResolvedValue(undefined);
 
       await service.deleteUserProfile(userId);
 
@@ -182,12 +222,10 @@ describe('UsersService', () => {
     it('should delete user profile without picture', async () => {
       const userId = '222';
       const profile = { userId, profilePictureUrl: undefined };
-      const userProfileRepo = service['userProfileRepo'];
-      const assetService = service['assetService'];
 
-      userProfileRepo.findOne = jest.fn().mockResolvedValue(profile);
-      assetService.deleteAsset = jest.fn();
-      userProfileRepo.remove = jest.fn().mockResolvedValue(undefined);
+      userProfileRepo.findOne.mockResolvedValue(profile);
+      assetService.deleteAsset.mockResolvedValue(undefined);
+      userProfileRepo.remove.mockResolvedValue(undefined);
 
       await service.deleteUserProfile(userId);
 
@@ -197,7 +235,7 @@ describe('UsersService', () => {
 
     it('should throw if user profile not found', async () => {
       const userId = 'notfound';
-      service['userProfileRepo'].findOne = jest.fn().mockResolvedValue(undefined);
+      userProfileRepo.findOne.mockResolvedValue(undefined);
 
       await expect(service.deleteUserProfile(userId)).rejects.toThrow(
         `User profile not found for user ID: ${userId}`

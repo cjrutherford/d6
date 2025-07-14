@@ -9,7 +9,7 @@ import {
 } from '../database/entities';
 
 import { DataSource } from 'typeorm';
-import { DatabaseModule } from 'src/database/database.module';
+import { DatabaseModule } from '../database/database.module';
 import { Module } from '@nestjs/common';
 import { getRepositoryToken } from '@nestjs/typeorm';
 
@@ -18,12 +18,24 @@ import { getRepositoryToken } from '@nestjs/typeorm';
         ConfigModule.forRoot({
             isGlobal: true,
             load: [() => {
+                const isTest = process.env.NODE_ENV === 'test';
+                const dbPort = parseInt(process.env.DB_PORT || (isTest ? '5433' : '5432'), 10);
+                const dbUsername = process.env.DB_USERNAME || (isTest ? 'test' : 'd6');
+                const dbPassword = process.env.DB_PASSWORD || (isTest ? 'test' : 'd6');
+                const dbName = process.env.DB_NAME || (isTest ? 'test' : 'd6');
+
+                console.log(`[InternalConfigModule] NODE_ENV: ${process.env.NODE_ENV}`);
+                console.log(`[InternalConfigModule] DB_PORT: ${dbPort}`);
+                console.log(`[InternalConfigModule] DB_USERNAME: ${dbUsername}`);
+                console.log(`[InternalConfigModule] DB_PASSWORD: ${dbPassword}`);
+                console.log(`[InternalConfigModule] DB_NAME: ${dbName}`);
+
                 return {
                     DB_HOST: process.env.DB_HOST || 'localhost',
-                    DB_PORT: parseInt(process.env.DB_PORT || '5432', 10),
-                    DB_USERNAME: process.env.DB_USERNAME || 'postgres',
-                    DB_PASSWORD: process.env.DB_PASSWORD || 'postgres',
-                    DB_DB: process.env.DB_DB || 'd6',
+                    DB_PORT: dbPort,
+                    DB_USERNAME: dbUsername,
+                    DB_PASSWORD: dbPassword,
+                    DB_NAME: dbName,
                     APPLICATION_ENCRIPTION_SEED: process.env.APPLICATION_ENCRIPTION_SEED || 'default_seed',
                     ASSET_PATH: process.env.ASSET_PATH || '/assets',
                 }
